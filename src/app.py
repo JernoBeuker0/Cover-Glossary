@@ -31,6 +31,7 @@ if not settings.configured:
         MIDDLEWARE=[
             "django.middleware.security.SecurityMiddleware",
             "whitenoise.middleware.WhiteNoiseMiddleware",
+            "django.middleware.csrf.CsrfViewMiddleware",
         ],
         TEMPLATES=[
             {
@@ -63,6 +64,17 @@ urlpatterns = [
     path("", home, name="home"),
     path("search/", search, name="search"),
 ]
+
+# The editor is never registered in production. Opt in explicitly for local use.
+if DEBUG and os.getenv("ENABLE_LOCAL_EDITOR", "false").lower() == "true":
+    from editor import editor_data, editor_delete, editor_page, editor_save
+
+    urlpatterns += [
+        path("editor/", editor_page, name="editor"),
+        path("editor/api/", editor_data, name="editor_data"),
+        path("editor/api/save/", editor_save, name="editor_save"),
+        path("editor/api/delete/", editor_delete, name="editor_delete"),
+    ]
 
 # Gunicorn loads this application rather than Django's development server.
 application = get_wsgi_application()

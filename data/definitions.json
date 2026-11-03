@@ -1,7 +1,9 @@
 {
   "BBD": {
     "definition": "Beta Business Days: unique two-day career event for all students from the Faculty of Science and Engineering of the University of Groningen.",
-    "aliases": ["Beta Business Days"]
+    "aliases": [
+      "Beta Business Days"
+    ]
   },
   "Bètastuf": {
     "definition": "The Bèta Student Federation (Bètastuf) is an organization founded and governed by the students of the Faculty of Science and Engineering (previously the Faculty of Mathematics and Natural Sciences) from the University of Groningen. Bètastuf aims to unify student representatives from all levels of our university, by providing an independent platform to voice the collective interest of these students and to develop student driven policies for our faculty.",
@@ -197,5 +199,11 @@
   },
   "For approval": {
     "definition": "Some topics on the agenda may be for approval. For such topics an accompanying document is supplied, on the approval of which shall be voted."
+  },
+  "Cover": {
+    "definition": "Study Association for BSc/MSc Artificial Intelligence, BSc/MSc Computing Science and Computational Cognitive Science",
+    "aliases": [
+      "Association"
+    ]
   }
 }

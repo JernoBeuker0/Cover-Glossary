@@ -108,3 +108,51 @@ input:focus {
 @media (prefers-reduced-motion: reduce) {
   .definition-panel { transition: none; }
 }
+
+/* Floating suggestion link. It opens your Google Form in a new tab. */
+.suggest-button {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  background: #fff;
+  color: #87091f;
+  box-shadow: 0 5px 18px #00000029;
+  font: inherit;
+  font-weight: 650;
+  text-decoration: none;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.suggest-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px #00000038;
+}
+
+.suggest-button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
+
+.suggest-button span { font-size: 23px; line-height: 0.7; }
+
+/* Keep content scrollable behind the fixed button, including on phones. */
+main { padding-bottom: 85px; }
+
+@media (max-width: 520px) {
+  .suggest-button {
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    padding: 13px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suggest-button { transition: none; }
+}

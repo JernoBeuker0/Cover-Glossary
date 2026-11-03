@@ -1,10 +1,13 @@
+# Example for the server administrator. This is NOT used by local docker compose.
+# The image must first be built and tagged or pulled from a registry.
 services:
   wiki:
     image: cover-glossary:latest
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000" # Suitable for a reverse proxy on this same host.
     environment:
       DJANGO_DEBUG: "false"
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Set in Portainer environment variables}
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Set to actual domain or hostname}
+      DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:?Set the production hostname}"
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:?Set a long random secret}"
+    # No ENABLE_LOCAL_EDITOR and no writable volumes in production.
