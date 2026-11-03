@@ -1,32 +1,41 @@
 # Association Wiki
 
-A Django-based glossary with fuzzy search and autocomplete functionality.
+A Django-based glossary with fuzzy search and autocomplete functionality. Definitions are stored in `data/definitions.json`.
 
 ## Prerequisites
 
-- Docker (including Docker Compose)
-- Python 3.12 (only required when running without Docker)
+- Docker with Docker Compose, **or** Python 3.12 for running without Docker.
 
 ## Running with Docker
 
-Open a terminal in the project's root directory and run:
+From the project's root directory:
 
 ```bash
 docker compose up --build
 ```
 
-Once the container is running, open [http://localhost:8000](http://localhost:8000) in your browser to access the website.
+Open [http://localhost:8000](http://localhost:8000) to use the glossary.
 
-### Note:
-- Changes to Python files should trigger Django's automatic reloader.
-- Changes to HTML and CSS are visible after refreshing the browser.
-- Definitions are loaded from `data/definitions.json` on each search, so updating the JSON file shouldn't need rebuilding the container.
-- Definitions should currently be modified manually. I will look at automating this better.
+### Editing the glossary locally
 
+Open **[http://localhost:8000/editor/](http://localhost:8000/editor/)** while Docker Compose is running.
+
+The editor lets you:
+
+- Add a new term and definition.
+- Select an existing term to change its name or definition.
+- Add or remove optional aliases and related terms.
+- Delete terms with confirmation.
+- Save directly to `data/definitions.json` (empty `aliases` and `related` fields are omitted).
+
+### To note:
+- The editor is intended for local development only. The Docker Compose setup enables it with `DJANGO_DEBUG=true` and `ENABLE_LOCAL_EDITOR=true`, binds port 8000 to **localhost only**, and mounts `./data` as **writable**.
+- The editor changes affect your local JSON file only. **Commit and push `data/definitions.json`** to GitHub when ready.
+- Changing a term's name updates any other term's `related` references to it; deleting a term removes references to it. The editor also prevents duplicate term names and checks for changes from another session before saving.
 
 ## Running without Docker
 
-From the project's root directory, making the virtual environment (in powershell):
+From the project root, create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
@@ -34,18 +43,21 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Start the Django development server:
+Enable the local editor and start Django:
 
-```bash
+Windows PowerShell:
+
+```powershell
 python src/app.py runserver
 ```
 
-The website will be available at [http://localhost:8000](http://localhost:8000).
+Open `http://localhost:8000/editor/` to execute the local editor or `http://localhost:8000/` to run the glossary.
 
-## Useful Information for Deployment
-- For local development, run `docker compose up --build`. This builds the image and starts Django with its development server.
-- For production deployment, use the `Dockerfile` to build an image that runs the application using Gunicorn.
-- The `compose.portainer.yaml` file provides a configuration for deployment through Portainer. Make sure to update the image name and environment variables before deploying.
-  - Set `DJANGO_ALLOWED_HOSTS` to the domain or hostname used to access the application, and provide a secure `DJANGO_SECRET_KEY`.
-  - The application runs on port `8000` inside the container.
-- Definitions are included in the Docker image. Changes to `definitions.json` therefore require rebuilding and redeploying the image.
+## Useful information for deployment
+
+- The `Dockerfile` builds the **production** image. It starts Gunicorn, with `DJANGO_DEBUG=false` by default, and does **not** enable the editor.
+- `compose.portainer.yaml` is an optional example for the administrator and must be adapted to their hosting setup and image name.
+  - The production application must receive a secure `DJANGO_SECRET_KEY` and an appropriate `DJANGO_ALLOWED_HOSTS` value from the server administrator.
+  - The application listens on port **8000** inside the container. HTTPS and external access are configured by the administrator.
+- **Do not mount `data/` writable in production.** The public glossary is read-only; edited definitions should be committed to GitHub and included in a rebuilt image.
+- A GitHub push does not automatically update a running Portainer container. Its image must be rebuilt and redeployed unless an update workflow is configured.

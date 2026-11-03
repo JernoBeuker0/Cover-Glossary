@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glossary Editor · Cover</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root { color-scheme: light; --red: #C8102E; --dark: #87091f; --edge: #e6e5e5; }
+    body { margin: 0; background: #f5f4f4; color: #242424; font: 16px/1.5 system-ui, -apple-system, sans-serif; }
+    header { background: var(--red); color: white; padding: 22px max(22px, calc((100vw - 1140px) / 2)); }
+    header h1 { font-size: 24px; margin: 0; }
+    header p { margin: 4px 0 0; opacity: .9; font-size: 14px; }
+    .layout { display: grid; grid-template-columns: 310px minmax(0, 1fr); gap: 20px; max-width: 1180px; margin: 28px auto; padding: 0 20px; }
+    .card { background: white; border: 1px solid var(--edge); border-radius: 14px; box-shadow: 0 4px 20px #0000000a; }
+    aside { align-self: start; overflow: hidden; }
+    .sidebar-header { padding: 18px; border-bottom: 1px solid var(--edge); display: grid; gap: 12px; }
+    .sidebar-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 700; }
+    .terms { max-height: min(64vh, 660px); overflow-y: auto; padding: 8px; }
+    .term-button { display: block; width: 100%; padding: 11px 12px; background: transparent; border: 0; border-radius: 8px; text-align: left; color: #343434; font: inherit; cursor: pointer; }
+    .term-button:hover { background: #f6f4f4; }
+    .term-button.active { background: #fff1f3; color: var(--dark); font-weight: 700; }
+    .editor-card { padding: 28px; }
+    h2 { margin: 0 0 4px; font-size: 23px; }
+    .muted { color: #666; margin: 0 0 20px; font-size: 14px; }
+    label { display: block; font-weight: 650; margin: 18px 0 7px; }
+    input, textarea, select { width: 100%; border: 1px solid #cbcaca; border-radius: 9px; padding: 11px 13px; background: white; color: #242424; font: inherit; }
+    textarea { resize: vertical; min-height: 130px; }
+    input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible { outline: 3px solid #eaa6b1; outline-offset: 2px; }
+    .hint { margin: 5px 0 0; font-size: 13px; color: #666; }
+    .small-input { display: flex; gap: 9px; }
+    .small-input input, .small-input select { min-width: 0; flex: 1; }
+    button { font: inherit; cursor: pointer; }
+    .button { border: 1px solid #ccc; background: white; border-radius: 9px; padding: 10px 15px; font-weight: 650; }
+    .button.primary { background: var(--red); border-color: var(--red); color: white; }
+    .button.primary:hover { background: var(--dark); }
+    .button:disabled { opacity: .55; cursor: not-allowed; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; padding-top: 10px; }
+    .tag { display: inline-flex; align-items: center; gap: 8px; padding: 5px 9px; border-radius: 20px; background: #fff1f3; color: var(--dark); font-size: 13px; }
+    .tag button { padding: 0; border: 0; color: inherit; background: none; font-weight: 700; font-size: 16px; }
+    .actions { border-top: 1px solid var(--edge); padding-top: 18px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    .danger { color: #a5212b; }
+    .status { min-height: 24px; margin: 15px 0 0; font-size: 14px; }
+    .status.error { color: #a5212b; }
+    .status.success { color: #146b45; }
+    .count { color: #666; font-size: 12px; }
+    .back { color: white; text-decoration: underline; text-underline-offset: 3px; }
+    @media (max-width: 740px) {
+      .layout { grid-template-columns: 1fr; gap: 15px; margin: 18px auto; padding: 0 14px; }
+      .terms { max-height: 190px; }
+      .editor-card { padding: 19px; }
+      header { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Glossary Editor</h1>
+    <p>Local development only · <a class="back" href="/">Back to glossary</a></p>
+  </header>
+  <div class="layout">
+    <aside class="card">
+      <div class="sidebar-header">
+        <div class="sidebar-title"><span>Terms</span><span class="count" id="count"></span></div>
+        <button type="button" id="new" class="button primary">+ New term</button>
+        <input id="filter" type="search" placeholder="Find a term..." aria-label="Filter terms">
+      </div>
+      <div id="terms" class="terms" aria-label="Existing terms"></div>
+    </aside>
+    <main class="card editor-card">
+      <h2 id="editor-title">Editing the term:</h2>
+      <p class="muted">Changes are saved to <code>data/definitions.json</code>.</p>
+      <form id="form">
+        {% csrf_token %}
+        <label for="term">Term *</label>
+        <input id="term" name="term" maxlength="120" required autocomplete="off">
+        <label for="definition">Definition *</label>
+        <textarea id="definition" name="definition" maxlength="4000" required></textarea>
+        <label for="alias-input">Aliases (optional)</label>
+        <div class="small-input">
+          <input id="alias-input" placeholder="e.g. Board of Advisors" maxlength="120">
+          <button class="button" id="alias-add" type="button">Add</button>
+        </div>
+        <p class="hint">Alternate names or abbreviations. Press Enter or Add.</p>
+        <div id="aliases" class="tags"></div>
+        <label for="related-select">Related terms (optional)</label>
+        <div class="small-input">
+          <select id="related-select" aria-label="Choose an existing related term"></select>
+          <button class="button" id="related-add" type="button">Add</button>
+        </div>
+        <p class="hint">Choose an existing glossary term. References are updated when terms are renamed.</p>
+        <div id="related" class="tags"></div>
+        <div class="actions">
+          <button id="delete" class="button danger" type="button">Delete term</button>
+          <button id="save" class="button primary" type="submit">Save changes</button>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </main>
+  </div>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let glossary = {}, version = '', original = '', aliases = [], related = [];
+    const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    function status(message = '', kind = '') {
+      $('status').textContent = message;
+      $('status').className = 'status ' + kind;
+    }
+    function choose(name = '') {
+      original = name;
+      const info = glossary[name] || {};
+      $('term').value = name;
+      $('definition').value = info.definition || '';
+      aliases = [...(info.aliases || [])];
+      related = [...(info.related || [])];
+      $('editor-title').textContent = name ? 'Edit a term' : 'New term';
+      $('delete').hidden = !name;
+      $('alias-input').value = '';
+      status();
+      render();
+      if (!name) $('term').focus();
+    }
+    function render() {
+      const names = Object.keys(glossary).sort((a,b) => a.localeCompare(b));
+      const filter = $('filter').value.trim().toLocaleLowerCase();
+      $('count').textContent = names.length + ' total';
+      $('terms').replaceChildren();
+      for (const name of names.filter(n => n.toLocaleLowerCase().includes(filter))) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'term-button' + (name === original ? ' active' : '');
+        button.textContent = name;
+        button.onclick = () => { if (!confirmDiscard()) return; choose(name); };
+        $('terms').append(button);
+      }
+      $('aliases').replaceChildren();
+      $('related').replaceChildren();
+      const drawTag = (container, text, callback) => {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        const label = document.createElement('span');
+        label.textContent = text;
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = '×';
+        remove.setAttribute('aria-label', 'Remove ' + text);
+        remove.onclick = callback;
+        tag.append(label, remove);
+        container.append(tag);
+      };
+      aliases.forEach((name, i) => drawTag($('aliases'), name, () => { aliases.splice(i, 1); render(); }));
+      related.forEach((name, i) => drawTag($('related'), name, () => { related.splice(i, 1); render(); }));
+      $('related-select').replaceChildren(new Option('Select a term...', ''));
+      for (const name of names.filter(n => n !== original && !related.includes(n))) {
+        $('related-select').add(new Option(name, name));
+      }
+    }
+    function confirmDiscard() {
+      const previous = glossary[original] || {};
+      const unsaved = $('term').value !== original ||
+        $('definition').value !== (previous.definition || '') ||
+        JSON.stringify(aliases) !== JSON.stringify(previous.aliases || []) ||
+        JSON.stringify(related) !== JSON.stringify(previous.related || []);
+      return !unsaved || confirm('Discard your unsaved changes?');
+    }
+    function addAlias() {
+      const value = $('alias-input').value.trim();
+      if (!value) return;
+      if (value.length > 120) return status('Alias is too long.', 'error');
+      if (!aliases.some(x => x.toLocaleLowerCase() === value.toLocaleLowerCase())) aliases.push(value);
+      $('alias-input').value = '';
+      render();
+      $('alias-input').focus();
+    }
+    function addRelated() {
+      const value = $('related-select').value;
+      if (value && !related.includes(value)) related.push(value);
+      render();
+    }
+    async function load(preferred = '') {
+      const response = await fetch('/editor/api/');
+      if (!response.ok) throw new Error('Unable to load glossary.');
+      const data = await response.json();
+      glossary = data.entries;
+      version = data.version;
+      choose(preferred && glossary[preferred] ? preferred : Object.keys(glossary).sort()[0] || '');
+    }
+    async function mutate(url, payload) {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrf},
+        body: JSON.stringify({...payload, version})
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Save failed');
+      glossary = data.entries;
+      version = data.version;
+    }
+    $('alias-add').onclick = addAlias;
+    $('alias-input').addEventListener('keydown', event => {
+      if (event.key === 'Enter') { event.preventDefault(); addAlias(); }
+    });
+    $('related-add').onclick = addRelated;
+    $('new').onclick = () => { if (confirmDiscard()) choose(); };
+    $('filter').addEventListener('input', render);
+    $('form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const term = $('term').value.trim();
+      if (!term || !$('definition').value.trim()) return status('Enter a term and definition.', 'error');
+      const pendingAlias = $('alias-input').value.trim();
+      if (pendingAlias && !aliases.some(value => value.toLocaleLowerCase() === pendingAlias.toLocaleLowerCase())) {
+        aliases.push(pendingAlias);
+      }
+      $('save').disabled = true;
+      try {
+        await mutate('/editor/api/save/', {
+          original, term, definition: $('definition').value, aliases, related
+        });
+        choose(term);
+        status('Saved to definitions.json. Remember to commit the change to GitHub.', 'success');
+      } catch(error) { status(error.message, 'error'); }
+      finally { $('save').disabled = false; }
+    });
+    $('delete').onclick = async () => {
+      if (!original || !confirm('Permanently delete "' + original + '"?')) return;
+      $('delete').disabled = true;
+      try {
+        await mutate('/editor/api/delete/', {term: original});
+        choose(Object.keys(glossary).sort()[0] || '');
+        status('Term deleted from definitions.json.', 'success');
+      } catch(error) { status(error.message, 'error'); }
+      finally { $('delete').disabled = false; }
+    };
+    load().catch(error => status(error.message, 'error'));
+  </script>
+</body>
+</html>

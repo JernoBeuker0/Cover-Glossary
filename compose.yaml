@@ -6,6 +6,7 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       DJANGO_DEBUG: "true"
+      ENABLE_LOCAL_EDITOR: "true"
     volumes:
       - ./src:/app/src:ro
-      - ./data:/app/data:ro
+      - ./data:/app/data:rw
