@@ -1,0 +1,10 @@
+services:
+  wiki:
+    image: cover-glossary:latest
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_DEBUG: "false"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Set in Portainer environment variables}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?Set to actual domain or hostname}

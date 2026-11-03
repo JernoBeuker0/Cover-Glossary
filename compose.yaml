@@ -1,8 +1,11 @@
 services:
   wiki:
     build: .
+    command: python src/app.py runserver 0.0.0.0:8000
     ports:
       - "127.0.0.1:8000:8000"
+    environment:
+      DJANGO_DEBUG: "true"
     volumes:
       - ./src:/app/src:ro
       - ./data:/app/data:ro
