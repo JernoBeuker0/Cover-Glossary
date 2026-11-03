@@ -1,0 +1,110 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #C8102E;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+main {
+  width: min(760px, calc(100% - 36px));
+  margin: 14vh auto 40px;
+}
+
+h1 {
+  margin: 0 0 30px;
+  text-align: center;
+  font-size: clamp(28px, 5vw, 40px);
+}
+
+input {
+  width: 100%;
+  padding: 24px 26px;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: white;
+  color: #242424;
+  font: inherit;
+  font-size: 22px;
+  outline: none;
+  box-shadow: 0 8px 30px #00000018;
+}
+
+input:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 4px #ffffff55;
+}
+
+#results {
+  display: grid;
+  gap: 0;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.result {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  border: 0;
+  border-bottom: 1px solid #e6e6e6;
+  background: white;
+  color: #242424;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.result:last-child { border-bottom: 0; }
+.result:hover, .result:focus-visible { background: #f6f6f6; }
+.result.selected { background: #f3f3f3; }
+.result span { font-size: 17px; font-weight: 650; }
+.result small { font-size: 12px; color: #666; }
+
+/* Only the panel height animates; the rows below are pushed down. */
+.definition-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  background: #fff1f3;
+  color: #242424;
+  transition: grid-template-rows 400ms ease-in-out;
+}
+
+.definition-panel.open {
+  grid-template-rows: 1fr;
+}
+
+.definition-content {
+  min-height: 0;
+  overflow: hidden;
+  border-left: 8px solid #87091f;
+}
+
+.definition-content h2 {
+  margin: 22px 22px 10px;
+  font-size: 20px;
+}
+
+.definition-content p {
+  margin: 0 22px 22px;
+  line-height: 1.65;
+}
+
+#empty { margin-top: 18px; color: white; }
+[hidden] { display: none !important; }
+
+@media (max-width: 520px) {
+  main { margin-top: 10vh; }
+  input { padding: 19px; font-size: 18px; }
+  .result { padding: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .definition-panel { transition: none; }
+}

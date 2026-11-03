@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Association Wiki</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <main>
+    <h1>Association Wiki</h1>
+    <input id="search" type="search" placeholder="Search for a term..."
+           aria-label="Search the glossary" autocomplete="off" autofocus>
+    <div id="results" aria-live="polite"></div>
+    <p id="empty" hidden>No matching terms found.</p>
+  </main>
+  <script>
+    const input = document.querySelector('#search');
+    const results = document.querySelector('#results');
+    const empty = document.querySelector('#empty');
+    let selectedButton = null;
+    let selectedPanel = null;
+    let timer;
+    let latestSearch = 0;
+
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      const query = input.value.trim();
+      const request = ++latestSearch; // Ignore responses from older searches.
+      results.replaceChildren();
+      selectedButton = null;
+      selectedPanel = null;
+      empty.hidden = true;
+      empty.textContent = 'No matching terms found.';
+      if (!query) return;
+
+      timer = setTimeout(async () => {
+        try {
+          const response = await fetch('/search/?q=' + encodeURIComponent(query));
+          if (!response.ok) throw new Error('Search failed');
+          const data = await response.json();
+          if (request !== latestSearch) return;
+          empty.hidden = data.results.length > 0;
+
+          for (const entry of data.results) {
+            const button = document.createElement('button');
+            button.className = 'result';
+            button.type = 'button';
+            const name = document.createElement('span');
+            name.textContent = entry.word;
+            const hint = document.createElement('small');
+            hint.textContent = entry.related ? 'Related term' : 'View definition';
+            button.append(name, hint);
+            button.setAttribute('aria-expanded', 'false');
+            const panel = document.createElement('div');
+            panel.className = 'definition-panel';
+            const content = document.createElement('article');
+            content.className = 'definition-content';
+            const heading = document.createElement('h2');
+            heading.textContent = entry.word;
+            const paragraph = document.createElement('p');
+            paragraph.textContent = entry.definition;
+            content.append(heading, paragraph);
+            panel.append(content);
+            panel.id = 'definition-' + request + '-' + data.results.indexOf(entry);
+            button.setAttribute('aria-controls', panel.id);
+
+            button.addEventListener('click', () => {
+              const isOpen = button === selectedButton;
+              if (selectedButton) {
+                selectedButton.classList.remove('selected');
+                selectedButton.setAttribute('aria-expanded', 'false');
+                selectedPanel.classList.remove('open');
+              }
+              selectedButton = null;
+              selectedPanel = null;
+              if (!isOpen) {
+                button.classList.add('selected');
+                button.setAttribute('aria-expanded', 'true');
+                panel.classList.add('open');
+                selectedButton = button;
+                selectedPanel = panel;
+              }
+            });
+            results.append(button, panel);
+          }
+        } catch (error) {
+          if (request === latestSearch) {
+            empty.textContent = 'Search unavailable. Please try again.';
+            empty.hidden = false;
+          }
+        }
+      }, 180);
+    });
+  </script>
+</body>
+</html>

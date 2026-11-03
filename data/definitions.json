@@ -1,0 +1,201 @@
+{
+  "BBD": {
+    "definition": "Beta Business Days: unique two-day career event for all students from the Faculty of Science and Engineering of the University of Groningen.",
+    "aliases": ["Beta Business Days"]
+  },
+  "Bètastuf": {
+    "definition": "The Bèta Student Federation (Bètastuf) is an organization founded and governed by the students of the Faculty of Science and Engineering (previously the Faculty of Mathematics and Natural Sciences) from the University of Groningen. Bètastuf aims to unify student representatives from all levels of our university, by providing an independent platform to voice the collective interest of these students and to develop student driven policies for our faculty.",
+    "aliases": [
+      "Bèta Student Federation"
+    ]
+  },
+  "CTF": {
+    "definition": "Cover Travel Foundation is set up to support big financial expenditures for the ExCee and the MxCee.",
+    "aliases": [
+      "Cover Travel Foundation"
+    ]
+  },
+  "NSVKI/LOKI": {
+    "definition": "National Artificial Intelligence study associations meeting in the Netherlands.",
+    "aliases": [
+      "NSVKI",
+      "LOKI"
+    ]
+  },
+  "SAM": {
+    "definition": "Study association meeting for the associations of the Faculty of Science and Engineering."
+  },
+  "SNiC": {
+    "definition": "An annual national conference with a computer science related subject."
+  },
+  "WISO": {
+    "definition": "National Computing Science and Mathematics study associations meeting in the Netherlands."
+  },
+  "Creditors": {
+    "definition": "Relations that we owe money."
+  },
+  "Debtors": {
+    "definition": "Relations that owe us money."
+  },
+  "Financial year": {
+    "definition": "The period over which the financial year report is established. The financial year of the association is from the 1st of August until the 31st of July."
+  },
+  "Liquidity": {
+    "definition": "The total amount of money we currently own in currency and giro (NL: giraal + chartaal)."
+  },
+  "Relation": {
+    "definition": "Partnered companies, members, other associations, or other legal entities with whom we’re financially involved."
+  },
+  "Reservation": {
+    "definition": "Money put aside for events in the next financial year (this money will be spend in the next year)."
+  },
+  "AudiCee": {
+    "definition": "Audit committee - makes sure the treasurer of the board does their work properly. This committee is appointed by the general assembly, and usually consists of previous treasurers.",
+    "aliases": [
+      "Audit committee"
+    ]
+  },
+  "AC/DCee": {
+    "definition": "Website committee - responsible for the website.",
+    "aliases": [
+      "Website committee"
+    ]
+  },
+  "ActiviTee": {
+    "definition": "Activity committee - responsible for socially oriented activities."
+  },
+  "Application committee": {
+    "definition": "The committee that is responsible for board applications. This committee formulates an advice for the formation of the next board."
+  },
+  "BoA": {
+    "definition": "Board of Advisors - advisory organ for the board.",
+    "aliases": [
+      "Board of Advisors"
+    ]
+  },
+  "ComExA": {
+    "definition": "Committee of External Affairs - the commissioner of external affairs of the board is the chairman of this committee. Responsible for organising career oriented activities and supporting the commissioner of external affairs.",
+    "aliases": [
+      "Committee of External Affairs"
+    ]
+  },
+  "DisCover": {
+    "definition": "Magazine committee - responsible for producing the magazine, which is similarly named.",
+    "aliases": [
+      "Magazine committee"
+    ]
+  },
+  "ExCee": {
+    "definition": "Excursion committee - responsible for organising an excursion. This is a yearly committee.",
+    "aliases": [
+      "Excursion committee"
+    ]
+  },
+  "HEROcee": {
+    "definition": "ERO committee (emergency response officer) - act as ERO’s when needed.",
+    "aliases": [
+      "ERO committee"
+    ]
+  },
+  "IntroCee": {
+    "definition": "Introduction committee - organises the introduction day and introduction camp. This is a yearly committee.",
+    "aliases": [
+      "Introduction committee"
+    ]
+  },
+  "DLCee": {
+    "definition": "LANs, computers & drinking committee - organises the LAN and crash & compile.",
+    "aliases": [
+      "LANs, computers & drinking committee"
+    ]
+  },
+  "LustrumCee": {
+    "definition": "Lustrum committee - organises the lustrum. This committee exists once every five years.",
+    "aliases": [
+      "Lustrum committee"
+    ]
+  },
+  "PhotoCee": {
+    "definition": "Photographer’s committee - responsible for taking pictures at activities and uploading those to the website.",
+    "aliases": [
+      "Photographer’s committee"
+    ]
+  },
+  "PropaganDee": {
+    "definition": "Publicity committee - responsible for creating the promotional posters.",
+    "aliases": [
+      "Publicity committee"
+    ]
+  },
+  "SporTee": {
+    "definition": "Sports committee - responsible for organising sports related activities.",
+    "aliases": [
+      "Sports committee"
+    ]
+  },
+  "StudCee": {
+    "definition": "Study support committee - responsible for organising study support sessions and study related skills workshops.",
+    "aliases": [
+      "Study support committee"
+    ]
+  },
+  "SympoCee": {
+    "definition": "Symposium committee - responsible for organising the yearly symposium. This is a yearly committee.",
+    "aliases": [
+      "Symposium committee"
+    ]
+  },
+  "YearbookCee": {
+    "definition": "Yearbook committee - responsible for creating the almanac. This is a yearly committee.",
+    "aliases": [
+      "Yearbook committee"
+    ]
+  },
+  "HR - R&R": {
+    "definition": "The document that states the rules and regulations of the associations. Changes to this document must be approved by the general assembly.",
+    "aliases": [
+      "HR",
+      "R&R",
+      "Huishoudelijk reglement",
+      "rules and regulations"
+    ]
+  },
+  "Statuten - Constitution": {
+    "definition": "The body of fundamental principles and established precedents according to which the association is acknowledged to be governed. These rules are legally binding and overrule the R&R.",
+    "aliases": [
+      "Statuten",
+      "Constitution"
+    ]
+  },
+  "Active member": {
+    "definition": "A member that is also a member of a committee of the general assembly, committee of the board, or working group."
+  },
+  "Board": {
+    "definition": "The governing organ of the association."
+  },
+  "Donor": {
+    "definition": "Usually a former member that still wishes to contribute to the association. Anyone can become a contributor by simply donating to the association. For more information see the R&R."
+  },
+  "Committee guidelines": {
+    "definition": "The document that describes the goals and responsibilities of committees."
+  },
+  "Member": {
+    "definition": "Everybody that is acknowledged by the board as a member and pays their contribution fee."
+  },
+  "Policy plan": {
+    "definition": "The document that states the ambitions and plans of the board for the academic year."
+  },
+  "SD": {
+    "definition": "Standaarddocumenten a.k.a. documents & templates - the portion of the website where documents are provided as well as templates to create new documents.",
+    "aliases": [
+      "Standaarddocumenten",
+      "documents & templates"
+    ]
+  },
+  "Working group": {
+    "definition": "Incidental committee with a singular purpose to be reached in the near future. After achieving this goal, the working group is disbanded."
+  },
+  "For approval": {
+    "definition": "Some topics on the agenda may be for approval. For such topics an accompanying document is supplied, on the approval of which shall be voted."
+  }
+}
