@@ -11,7 +11,6 @@ from django.views.decorators.http import require_GET, require_POST
 
 from search import DATA_FILE
 
-
 class EditorError(ValueError):
     pass
 

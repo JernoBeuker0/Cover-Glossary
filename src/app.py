@@ -1,9 +1,18 @@
-"""Django routes and configuration for the Cover glossary."""
 import os
 import sys
 from pathlib import Path
 
 from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.urls import path
+from django.core.wsgi import get_wsgi_application
+from search import find_terms
+from django.core.management import execute_from_command_line
+
+from editor import editor_data, editor_delete, editor_page, editor_save
+
+# --- Configuration ---------------------------------------------------------
 
 SRC_DIR = Path(__file__).resolve().parent
 DEBUG = os.getenv("DJANGO_DEBUG", "false").lower() == "true"
@@ -21,7 +30,11 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
-if not settings.configured:
+def configure_django():
+    """Configure standalone Django settings only when necessary."""
+    if settings.configured:
+        return
+
     settings.configure(
         DEBUG=DEBUG,
         SECRET_KEY=SECRET_KEY,
@@ -45,41 +58,42 @@ if not settings.configured:
         STATIC_ROOT=SRC_DIR / "collected_static",
     )
 
-from django.http import JsonResponse  # noqa: E402
-from django.shortcuts import render  # noqa: E402
-from django.urls import path  # noqa: E402
-from django.core.wsgi import get_wsgi_application  # noqa: E402
-from search import find_terms  # noqa: E402
 
+#--------------- VIEWS -----------------
 
 def home(request):
     return render(request, "index.html")
 
-
 def search(request):
     return JsonResponse({"results": find_terms(request.GET.get("q", ""))})
 
+#--------------- URL PATTERNS -----------------
 
-urlpatterns = [
-    path("", home, name="home"),
-    path("search/", search, name="search"),
-]
+def get_editor_routes():
+    """Return local editor routes only when explicitly enabled in debug mode."""
+    if not (DEBUG and os.getenv("ENABLE_LOCAL_EDITOR", "false").lower() == "true"):
+        return []
 
-# The editor is never registered in production. Opt in explicitly for local use.
-if DEBUG and os.getenv("ENABLE_LOCAL_EDITOR", "false").lower() == "true":
-    from editor import editor_data, editor_delete, editor_page, editor_save
-
-    urlpatterns += [
+    return [
         path("editor/", editor_page, name="editor"),
         path("editor/api/", editor_data, name="editor_data"),
         path("editor/api/save/", editor_save, name="editor_save"),
         path("editor/api/delete/", editor_delete, name="editor_delete"),
     ]
 
-# Gunicorn loads this application rather than Django's development server.
+def get_urlpatterns():
+    """Combine public routes with optional development-only routes."""
+    return [
+        path("", home, name="home"),
+        path("search/", search, name="search"),
+    ] + get_editor_routes()
+
+
+#--------------- ENTRY POINTS -----------------
+
+configure_django()
+urlpatterns = get_urlpatterns()
 application = get_wsgi_application()
 
 if __name__ == "__main__":
-    from django.core.management import execute_from_command_line
-
     execute_from_command_line(sys.argv)
